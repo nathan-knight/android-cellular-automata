@@ -9,8 +9,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="codes.knight.cellularautomata.LifeActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <codes.knight.cellularautomata.LifeView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/surfaceView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
