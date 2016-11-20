@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import codes.knight.cellularautomata.LifeView;
+import codes.knight.cellularautomata.R;
 
 public class LifeActivity extends AppCompatActivity {
 
@@ -19,10 +20,8 @@ public class LifeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_life);
-        setContentView(new LifeView(this));
-
-//        surfaceView = (LifeView) findViewById(R.id.surfaceView);
+//        surfaceView = new LifeView(this);
+        setContentView(R.layout.activity_life);
 
     }
 

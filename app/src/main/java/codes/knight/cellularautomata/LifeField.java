@@ -10,7 +10,7 @@ import android.graphics.Paint;
 
 public class LifeField {
 
-    private int panX, panY;
+    private float panX, panY;
     private int width;
     private int height;
     private int cellWidth = 50;
@@ -34,24 +34,33 @@ public class LifeField {
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 paint.setStyle(field[x][y] ? Paint.Style.FILL : Paint.Style.STROKE);
-                c.drawRect(x * cellWidth, y * cellHeight, (x + 1) * cellWidth, (y + 1) * cellHeight, paint);
+                c.drawRect(x * cellWidth + (int) panX, y * cellHeight + (int) panY,
+                        (x + 1) * cellWidth + (int) panX, (y + 1) * cellHeight + (int) panY, paint);
             }
         }
     }
 
-    public int getPanX() {
+    public float getPanX() {
         return panX;
     }
 
-    public void adjustPanX(int deltaX) {
+    public void adjustPanX(float deltaX) {
         this.panX += deltaX;
+//        Log.d("PAN X", "" + panX);
     }
 
-    public int getPanY() {
+    public float getPanY() {
         return panY;
     }
 
-    public void adjustPanY(int deltaY) {
+    public void adjustPanY(float deltaY) {
         this.panY += deltaY;
+//        Log.d("PAN Y", "" + panY);
+    }
+
+    public void toggleCell(float x, float y) {
+        int cellX = (int) ((x - panX)/cellWidth);
+        int cellY = (int) ((y - panY)/cellHeight);
+        field[cellX][cellY] = !field[cellX][cellY];
     }
 }

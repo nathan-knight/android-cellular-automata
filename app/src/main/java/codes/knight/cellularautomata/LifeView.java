@@ -2,12 +2,16 @@ package codes.knight.cellularautomata;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v4.view.VelocityTrackerCompat;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.VelocityTracker;
+import android.view.View;
 
 /**
  * Created by thee-code-warrior on 9/22/2016.
@@ -19,11 +23,14 @@ public class LifeView extends SurfaceView {
     Surface surface;
     Thread thread;
     private LifeField field;
+    VelocityTracker velocityTracker = null;
+    final String LOG_TAG = this.getClass().getSimpleName();
 
     public LifeView(Context context) {
         super(context);
+        if(isInEditMode()) return;
         paint = new Paint();
-        getHolder().addCallback(new SurfaceHolder.Callback() {
+        /*getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
                 Canvas c = getHolder().lockCanvas();
@@ -44,7 +51,7 @@ public class LifeView extends SurfaceView {
             public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
 
             }
-        });
+        });*/
         field = new LifeField(100, 100);
         thread = new Thread(new Runnable() {
             @Override
@@ -59,10 +66,47 @@ public class LifeView extends SurfaceView {
             }
         });
         thread.start();
+        this.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch(motionEvent.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if(velocityTracker == null)
+                            velocityTracker = VelocityTracker.obtain();
+                        else
+                            velocityTracker.clear();
+                        velocityTracker.addMovement(motionEvent);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        velocityTracker.addMovement(motionEvent);
+                        velocityTracker.computeCurrentVelocity(20);
+                        field.adjustPanX(VelocityTrackerCompat.getXVelocity(velocityTracker, motionEvent.getPointerId(motionEvent.getActionIndex())));
+                        field.adjustPanY(VelocityTrackerCompat.getYVelocity(velocityTracker, motionEvent.getPointerId(motionEvent.getActionIndex())));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        velocityTracker.addMovement(motionEvent);
+                        velocityTracker.computeCurrentVelocity(20);
+                        Log.d(LOG_TAG, "Touch ACTION_UP");
+                        field.toggleCell(motionEvent.getX(), motionEvent.getY());
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        velocityTracker.recycle();
+                        break;
+                }
+                return true;
+            }
+        });
+        this.setOnDragListener(new OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                return true;
+            }
+        });
+        Log.d(LOG_TAG, "Listeners added");
     }
 
     public LifeView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context);
     }
 
 }
