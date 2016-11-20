@@ -1,4 +1,4 @@
-package codes.knight.cellularautomata;
+package codes.knight.cellularautomata.Activity;
 
 /**
  * Created by thee-code-warrior on 9/22/2016.
@@ -6,6 +6,8 @@ package codes.knight.cellularautomata;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import codes.knight.cellularautomata.LifeView;
 
 public class LifeActivity extends AppCompatActivity {
 
@@ -17,26 +19,20 @@ public class LifeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_life);
+//        setContentView(R.layout.activity_life);
+        setContentView(new LifeView(this));
 
-        surfaceView = (LifeView) findViewById(R.id.surfaceView);
+//        surfaceView = (LifeView) findViewById(R.id.surfaceView);
 
-        gameThread = new Thread(surfaceView);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(!gameThread.isAlive()) {
-            gameThread.run();
-        } else {
-            surfaceView.setRunning(false);
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        surfaceView.setRunning(false);
     }
 }
