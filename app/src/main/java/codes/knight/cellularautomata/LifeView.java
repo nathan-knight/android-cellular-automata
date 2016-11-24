@@ -3,15 +3,12 @@ package codes.knight.cellularautomata;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.support.v4.view.VelocityTrackerCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceView;
-import android.view.VelocityTracker;
-import android.view.View;
 
 /**
  * Created by thee-code-warrior on 9/22/2016.
@@ -22,14 +19,17 @@ public class LifeView extends SurfaceView {
     Paint paint;
     Surface surface;
     Thread thread;
-    private LifeField field;
-    VelocityTracker velocityTracker = null;
+    public LifeField field;
+    InputHandler inputHandler;
+    GestureDetectorCompat gestureDetector;
     final String LOG_TAG = this.getClass().getSimpleName();
 
     public LifeView(Context context) {
         super(context);
         if(isInEditMode()) return;
+        Log.d(LOG_TAG, "Creating paint.");
         paint = new Paint();
+        Log.d(LOG_TAG, "Created paint.");
         /*getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -53,6 +53,7 @@ public class LifeView extends SurfaceView {
             }
         });*/
         field = new LifeField(100, 100);
+        Log.d(LOG_TAG, "Creating and launching thread.");
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -66,43 +67,26 @@ public class LifeView extends SurfaceView {
             }
         });
         thread.start();
-        this.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch(motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if(velocityTracker == null)
-                            velocityTracker = VelocityTracker.obtain();
-                        else
-                            velocityTracker.clear();
-                        velocityTracker.addMovement(motionEvent);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        velocityTracker.addMovement(motionEvent);
-                        velocityTracker.computeCurrentVelocity(20);
-                        field.adjustPanX(VelocityTrackerCompat.getXVelocity(velocityTracker, motionEvent.getPointerId(motionEvent.getActionIndex())));
-                        field.adjustPanY(VelocityTrackerCompat.getYVelocity(velocityTracker, motionEvent.getPointerId(motionEvent.getActionIndex())));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        velocityTracker.addMovement(motionEvent);
-                        velocityTracker.computeCurrentVelocity(20);
-                        Log.d(LOG_TAG, "Touch ACTION_UP");
-                        field.toggleCell(motionEvent.getX(), motionEvent.getY());
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        velocityTracker.recycle();
-                        break;
-                }
-                return true;
-            }
-        });
-        this.setOnDragListener(new OnDragListener() {
+        Log.d(LOG_TAG, "Thread launched.");
+        inputHandler = new InputHandler(this);
+        gestureDetector = new GestureDetectorCompat(getContext(), inputHandler);
+        this.setLongClickable(true);
+//        gestureDetector.set
+//        getContext().gest
+//        this.setOnTouchListener(inputHandler);
+        /*this.setOnDragListener(new OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
                 return true;
             }
-        });
+        });*/
         Log.d(LOG_TAG, "Listeners added");
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     public LifeView(Context context, AttributeSet attrs) {
