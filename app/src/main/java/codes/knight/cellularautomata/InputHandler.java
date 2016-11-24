@@ -3,53 +3,48 @@ package codes.knight.cellularautomata;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.VelocityTracker;
+import android.view.View;
+import android.widget.Button;
 
 /**
  * Created by Nathan on 11/23/2016.
  */
 
-public class InputHandler implements GestureDetector.OnGestureListener { // View.OnTouchListener,
+public class InputHandler extends ScaleGestureDetector.SimpleOnScaleGestureListener implements GestureDetector.OnGestureListener, Button.OnClickListener { // View.OnTouchListener,
 
     VelocityTracker velocityTracker = null;
     LifeView lifeView;
+    ScaleGestureDetector scaleGestureDetector;
     final String LOG_TAG = this.getClass().getSimpleName();
 
     public InputHandler(LifeView lifeView) {
         this.lifeView = lifeView;
+        scaleGestureDetector = new ScaleGestureDetector(lifeView.getContext(), new ScaleGestureDetector.OnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+                Log.d(LOG_TAG, "Scale factor: " + scaleGestureDetector.getScaleFactor());
+                return false;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector scaleGestureDetector) {
+                Log.d(LOG_TAG, "onScaleBegin");
+                return false;
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {
+                Log.d(LOG_TAG, "onScaleEnd");
+            }
+        });
     }
-//    @Override
-//    public boolean onTouch(View view, MotionEvent motionEvent) {
-//        switch(motionEvent.getActionMasked()) {
-//            case MotionEvent.ACTION_DOWN:
-//                if(velocityTracker == null)
-//                    velocityTracker = VelocityTracker.obtain();
-//                else
-//                    velocityTracker.clear();
-//                velocityTracker.addMovement(motionEvent);
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                velocityTracker.addMovement(motionEvent);
-//                velocityTracker.computeCurrentVelocity(20);
-//                lifeView.field.adjustPanX(VelocityTrackerCompat.getXVelocity(velocityTracker, motionEvent.getPointerId(motionEvent.getActionIndex())));
-//                lifeView.field.adjustPanY(VelocityTrackerCompat.getYVelocity(velocityTracker, motionEvent.getPointerId(motionEvent.getActionIndex())));
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                velocityTracker.addMovement(motionEvent);
-//                velocityTracker.computeCurrentVelocity(20);
-//                Log.d(LOG_TAG, "Touch ACTION_UP");
-//                lifeView.field.toggleCell(motionEvent.getX(), motionEvent.getY());
-//                break;
-//            case MotionEvent.ACTION_CANCEL:
-//                velocityTracker.recycle();
-//                break;
-//        }
-//        return true;
-//    }
 
     @Override
     public boolean onDown(MotionEvent motionEvent) {
         Log.d(LOG_TAG, "onDown");
+        scaleGestureDetector.onTouchEvent(motionEvent);
         return true;
     }
 
@@ -82,5 +77,11 @@ public class InputHandler implements GestureDetector.OnGestureListener { // View
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
         Log.d(LOG_TAG, "onFling");
         return false;
+    }
+
+    @Override
+    public void onClick(View view) {
+        Log.d(LOG_TAG, "Button pressed");
+        lifeView.lifeRunning = !lifeView.lifeRunning;
     }
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceView;
+import android.widget.Button;
 
 /**
  * Created by thee-code-warrior on 9/22/2016.
@@ -20,6 +21,7 @@ public class LifeView extends SurfaceView {
     Surface surface;
     Thread thread;
     public LifeField field;
+    public boolean lifeRunning = false;
     InputHandler inputHandler;
     GestureDetectorCompat gestureDetector;
     final String LOG_TAG = this.getClass().getSimpleName();
@@ -30,38 +32,21 @@ public class LifeView extends SurfaceView {
         Log.d(LOG_TAG, "Creating paint.");
         paint = new Paint();
         Log.d(LOG_TAG, "Created paint.");
-        /*getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                Canvas c = getHolder().lockCanvas();
-                if(c != null) {
-                    c.drawColor(Color.BLACK);
-                    paint.setColor(Color.YELLOW);
-                    c.drawRect(50f, 90f, 500f, 500f, paint);
-                    getHolder().unlockCanvasAndPost(c);
-                }
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-            }
-        });*/
         field = new LifeField(100, 100);
         Log.d(LOG_TAG, "Creating and launching thread.");
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                long lastTick = 0;
                 while(running) {
                     Canvas c = getHolder().lockCanvas();
                     if(c != null) {
                         field.draw(c);
                         getHolder().unlockCanvasAndPost(c);
+                    }
+                    if(System.currentTimeMillis() - lastTick > 1000 && lifeRunning) {
+                        lastTick = System.currentTimeMillis();
+                        field.tick();
                     }
                 }
             }
@@ -71,16 +56,14 @@ public class LifeView extends SurfaceView {
         inputHandler = new InputHandler(this);
         gestureDetector = new GestureDetectorCompat(getContext(), inputHandler);
         this.setLongClickable(true);
-//        gestureDetector.set
-//        getContext().gest
-//        this.setOnTouchListener(inputHandler);
-        /*this.setOnDragListener(new OnDragListener() {
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-                return true;
-            }
-        });*/
         Log.d(LOG_TAG, "Listeners added");
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        Button buttonPausePlay = (Button) getRootView().findViewById(R.id.buttonPausePlay);
+        buttonPausePlay.setOnClickListener(inputHandler);
     }
 
     @Override

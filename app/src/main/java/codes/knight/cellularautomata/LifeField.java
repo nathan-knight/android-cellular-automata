@@ -17,6 +17,7 @@ public class LifeField {
     private int cellHeight = 100;
     private boolean[][] field;
     private Paint paint;
+    final String LOG_TAG = this.getClass().getSimpleName();
 
     public LifeField(int width, int height) {
         field = new boolean[width][height];
@@ -37,6 +38,36 @@ public class LifeField {
                         (x + 1) * cellWidth + (int) panX, (y + 1) * cellHeight + (int) panY, paint);
             }
         }
+    }
+
+    private int getLivingNeighbors(int posX, int posY) {
+        int count = 0;
+        for(int x = posX - 1; x <= posX + 1; x++) {
+            for(int y = posY - 1; y <= posY + 1; y++) {
+                if(x == posX && y == posY) continue;
+                if(field[x >= width ? 0 : x < 0 ? 0 : x][y >= height ? 0 : y < 0 ? 0 : y]) count++;
+            }
+        }
+        return count;
+    }
+
+    public void tick() {
+        boolean[][] nextGeneration = new boolean[width][height];
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                int livingNeighborCount = getLivingNeighbors(x, y);
+                if(livingNeighborCount < 2 || livingNeighborCount > 3) {
+                    nextGeneration[x][y] = false;
+                }
+                if(livingNeighborCount == 3) {
+                    nextGeneration[x][y] = true;
+                }
+                if(livingNeighborCount == 2) {
+                    nextGeneration[x][y] = field[x][y];
+                }
+            }
+        }
+        field = nextGeneration;
     }
 
     public float getPanX() {

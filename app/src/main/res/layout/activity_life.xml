@@ -9,23 +9,26 @@
     <codes.knight.cellularautomata.LifeView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/surfaceView" />
+        android:id="@+id/surfaceView"
+        android:layout_weight="1" />
 
-    <HorizontalScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight=".025">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:text="@string/play_pause"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:id="@+id/buttonPausePlay" />
 
-            <Button
-                android:text="Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </HorizontalScrollView>
-</LinearLayout>
+        <Button
+            android:text="Placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button2" />
+    </LinearLayout>
+
+1</LinearLayout>
