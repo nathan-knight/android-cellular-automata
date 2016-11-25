@@ -12,23 +12,42 @@
         android:id="@+id/surfaceView"
         android:layout_weight="1" />
 
-    <LinearLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_weight=".025">
 
-        <Button
-            android:text="@string/play_pause"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonPausePlay" />
+            android:orientation="horizontal">
 
-        <Button
-            android:text="Placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button2" />
-    </LinearLayout>
+            <Button
+                android:text="Clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonClear"
+                android:layout_weight="1" />
 
-1</LinearLayout>
+            <Button
+                android:text="Slower"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonSlower" />
+
+            <Button
+                android:text="@string/play_pause"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonPausePlay" />
+
+            <Button
+                android:text="Faster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonFaster" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    1
+</LinearLayout>

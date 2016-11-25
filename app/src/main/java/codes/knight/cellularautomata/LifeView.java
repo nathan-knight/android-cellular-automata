@@ -21,6 +21,7 @@ public class LifeView extends SurfaceView {
     Surface surface;
     Thread thread;
     public LifeField field;
+    public long millisPerTick = 100;
     public boolean lifeRunning = false;
     InputHandler inputHandler;
     GestureDetectorCompat gestureDetector;
@@ -44,7 +45,7 @@ public class LifeView extends SurfaceView {
                         field.draw(c);
                         getHolder().unlockCanvasAndPost(c);
                     }
-                    if(System.currentTimeMillis() - lastTick > 1000 && lifeRunning) {
+                    if(System.currentTimeMillis() - lastTick > millisPerTick && lifeRunning) {
                         lastTick = System.currentTimeMillis();
                         field.tick();
                     }
@@ -64,10 +65,17 @@ public class LifeView extends SurfaceView {
         super.onAttachedToWindow();
         Button buttonPausePlay = (Button) getRootView().findViewById(R.id.buttonPausePlay);
         buttonPausePlay.setOnClickListener(inputHandler);
+        Button buttonFaster = (Button) getRootView().findViewById(R.id.buttonFaster);
+        buttonFaster.setOnClickListener(inputHandler);
+        Button buttonSlower = (Button) getRootView().findViewById(R.id.buttonSlower);
+        buttonSlower.setOnClickListener(inputHandler);
+        Button buttonClear = (Button) getRootView().findViewById(R.id.buttonClear);
+        buttonClear.setOnClickListener(inputHandler);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(inputHandler.onRawTouch(event)) return true;
         gestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }

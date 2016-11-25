@@ -15,6 +15,7 @@ public class LifeField {
     private int height;
     private int cellWidth = 100;
     private int cellHeight = 100;
+    private float scale = 1;
     private boolean[][] field;
     private Paint paint;
     final String LOG_TAG = this.getClass().getSimpleName();
@@ -30,7 +31,7 @@ public class LifeField {
 
     public void draw(Canvas c) {
         c.drawColor(Color.BLACK);
-        paint.setColor(Color.YELLOW);
+        paint.setColor(Color.GREEN);
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 paint.setStyle(field[x][y] ? Paint.Style.FILL : Paint.Style.STROKE);
@@ -45,7 +46,7 @@ public class LifeField {
         for(int x = posX - 1; x <= posX + 1; x++) {
             for(int y = posY - 1; y <= posY + 1; y++) {
                 if(x == posX && y == posY) continue;
-                if(field[x >= width ? 0 : x < 0 ? 0 : x][y >= height ? 0 : y < 0 ? 0 : y]) count++;
+                if(field[x >= width ? 0 : x < 0 ? width - 1 : x][y >= height ? 0 : y < 0 ? height - 1 : y]) count++;
             }
         }
         return count;
@@ -92,5 +93,15 @@ public class LifeField {
         int cellX = (int) ((x - panX)/cellWidth);
         int cellY = (int) ((y - panY)/cellHeight);
         field[cellX][cellY] = !field[cellX][cellY];
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+        this.cellHeight = (int)(100.0 / this.scale);
+        this.cellWidth = (int)(100.0 / this.scale);
+    }
+
+    public void clear() {
+        this.field = new boolean[width][height];
     }
 }
