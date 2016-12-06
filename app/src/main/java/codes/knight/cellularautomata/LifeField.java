@@ -3,12 +3,15 @@ package codes.knight.cellularautomata;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Nathan on 11/20/2016.
+ * Contains logic for Cellular Automata and handles drawing.
  */
 
-public class LifeField {
+public class LifeField implements Parcelable {
 
     private float panX, panY;
     private int width;
@@ -18,7 +21,7 @@ public class LifeField {
     private float scale = 1;
     private boolean[][] field;
     private Paint paint;
-    final String LOG_TAG = this.getClass().getSimpleName();
+    private final String LOG_TAG = this.getClass().getSimpleName();
 
     public LifeField(int width, int height) {
         field = new boolean[width][height];
@@ -28,6 +31,54 @@ public class LifeField {
         panX = 0;
         panY = 0;
     }
+
+    private LifeField(Parcel in) {
+        panX = in.readFloat();
+        panY = in.readFloat();
+        width = in.readInt();
+        height = in.readInt();
+        cellWidth = in.readInt();
+        cellHeight = in.readInt();
+        scale = in.readFloat();
+        field = new boolean[width][height];
+        boolean[] inputArray = null;
+        in.readBooleanArray(inputArray);
+        if(inputArray != null) {
+            for(int i = 0; i < width * height; i++) {
+                field[(i - i % height)/height][i % height] = inputArray[i];
+            }
+        }
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeFloat(panX);
+        parcel.writeFloat(panY);
+        parcel.writeInt(width);
+        parcel.writeInt(height);
+        parcel.writeInt(cellWidth);
+        parcel.writeInt(cellHeight);
+        parcel.writeFloat(scale);
+        boolean[] outputField = new boolean[width * height];
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                outputField[y + x * height] = field[x][y];
+            }
+        }
+        parcel.writeBooleanArray(outputField);
+    }
+
+    public static final Creator<LifeField> CREATOR = new Creator<LifeField>() {
+        @Override
+        public LifeField createFromParcel(Parcel in) {
+            return new LifeField(in);
+        }
+
+        @Override
+        public LifeField[] newArray(int size) {
+            return new LifeField[size];
+        }
+    };
 
     public void draw(Canvas c) {
         c.drawColor(Color.BLACK);
@@ -77,7 +128,6 @@ public class LifeField {
 
     public void adjustPanX(float deltaX) {
         this.panX += deltaX;
-//        Log.d("PAN X", "" + panX);
     }
 
     public float getPanY() {
@@ -86,7 +136,6 @@ public class LifeField {
 
     public void adjustPanY(float deltaY) {
         this.panY += deltaY;
-//        Log.d("PAN Y", "" + panY);
     }
 
     public void toggleCell(float x, float y) {
@@ -103,5 +152,10 @@ public class LifeField {
 
     public void clear() {
         this.field = new boolean[width][height];
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }

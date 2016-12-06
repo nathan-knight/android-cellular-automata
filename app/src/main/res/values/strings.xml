@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Cellular Automata</string>
     <string name="play_pause">Play/Pause</string>
+    <string name="slower">Slower</string>
+    <string name="faster">Faster</string>
+    <string name="clear">Clear</string>
 </resources>

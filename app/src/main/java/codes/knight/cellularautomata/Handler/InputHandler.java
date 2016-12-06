@@ -1,23 +1,27 @@
-package codes.knight.cellularautomata;
+package codes.knight.cellularautomata.Handler;
 
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.Button;
 
+import codes.knight.cellularautomata.R;
+import codes.knight.cellularautomata.View.LifeView;
+
 /**
  * Created by Nathan on 11/23/2016.
+ *  Handles touch events.
  */
 
-public class InputHandler extends ScaleGestureDetector.SimpleOnScaleGestureListener implements GestureDetector.OnGestureListener, Button.OnClickListener, GestureDetector.OnDoubleTapListener { // View.OnTouchListener,
+public class InputHandler extends ScaleGestureDetector.SimpleOnScaleGestureListener implements GestureDetector.OnGestureListener,
+        Button.OnClickListener, GestureDetector.OnDoubleTapListener {
 
-    VelocityTracker velocityTracker = null;
-    LifeView lifeView;
-    ScaleGestureDetector scaleGestureDetector;
-    final String LOG_TAG = this.getClass().getSimpleName();
+//    VelocityTracker velocityTracker = null;
+    private LifeView lifeView;
+    private ScaleGestureDetector scaleGestureDetector;
+    private final String LOG_TAG = this.getClass().getSimpleName();
 
     float lastTouchPositionY = 0;
 
@@ -56,14 +60,7 @@ public class InputHandler extends ScaleGestureDetector.SimpleOnScaleGestureListe
                 Log.d(LOG_TAG, "ACTION_UP");
                 break;
             case MotionEvent.ACTION_MOVE:
-                /*if(event.getPointerCount() == 2) {
-                    float dy = event.getY() - lastTouchPositionY;
-                    lastTouchPositionY = event.getY();
-                    Log.d(LOG_TAG, "Adjusting millisecond tick rate by " + dy + " to " + lifeView.millisPerTick);
-                    lifeView.millisPerTick += dy;
-                    if (lifeView.millisPerTick < 1) lifeView.millisPerTick = 1;
-                    return true;
-                }*/
+                break;
         }
         return false;
     }
@@ -88,7 +85,6 @@ public class InputHandler extends ScaleGestureDetector.SimpleOnScaleGestureListe
     public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float dx, float dy) {
         lifeView.field.adjustPanX(-dx);
         lifeView.field.adjustPanY(-dy);
-//        Log.d(LOG_TAG, "onScroll called, " + dx + " " + dy);
         return true;
     }
 
@@ -126,7 +122,6 @@ public class InputHandler extends ScaleGestureDetector.SimpleOnScaleGestureListe
     @Override
     public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
         lifeView.field.toggleCell(motionEvent.getX(), motionEvent.getY());
-//        Log.d(LOG_TAG, "onSingleTapUp");
         return true;
     }
 
