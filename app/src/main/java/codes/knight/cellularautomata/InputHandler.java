@@ -27,7 +27,7 @@ public class InputHandler extends ScaleGestureDetector.SimpleOnScaleGestureListe
             @Override
             public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
                 Log.d(LOG_TAG, "Scale factor: " + scaleGestureDetector.getScaleFactor());
-                lifeView.field.setScale(scaleGestureDetector.getScaleFactor());
+                lifeView.field.setScale(1/scaleGestureDetector.getScaleFactor());
                 return false;
             }
 
