@@ -68,10 +68,11 @@ public class LifeView extends SurfaceView {
                         field.tick();
                     }
                 }
+                Log.d(LOG_TAG, "Thread died of natural causes/dysentery");
             }
         });
         running = true;
-        thread.start();
+//        thread.start();
         Log.d(LOG_TAG, "Thread launched.");
     }
 
@@ -122,7 +123,8 @@ public class LifeView extends SurfaceView {
     }
 
     public void onResume() {
-        createThread();
+        running = true;
+        if(!thread.isAlive()) thread.start();
     }
 
     public void onPause() {
