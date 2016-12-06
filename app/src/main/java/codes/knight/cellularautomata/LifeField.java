@@ -82,7 +82,8 @@ public class LifeField implements Parcelable {
 
     public void draw(Canvas c) {
         c.drawColor(Color.BLACK);
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.rgb(92, 233, 255));
+        paint.setStrokeWidth(5);
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 paint.setStyle(field[x][y] ? Paint.Style.FILL : Paint.Style.STROKE);
